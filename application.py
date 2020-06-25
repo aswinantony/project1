@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
+#app.config['DATABASE_URL'] = "postgres://ukpdswnmbmmcuz:23b8e24df67f99e4c192428081408be924dc1745162bc32bca778db643c70e90@ec2-3-234-109-123.compute-1.amazonaws.com:5432/d6hgmt6gs7ijvf"
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -24,3 +25,6 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     return "Project 1: TODO"
+
+# For DB connection using Terminal execute below.
+# export DATABASE_URL="postgresql://username:password@localhost:5432/database"
