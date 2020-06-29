@@ -1,21 +1,34 @@
-# TODO
-"""write a program that will take the books and import them into your PostgreSQL database. 
-You will first need to decide what table(s) to create, what columns those tables should have, and how they should relate to one another."""
-#CS50 library has the SQL function which allows execution of sql queries
-from flask_sqlalchemy import SQLAlchemy
-
 # The csv module implements classes to read and write tabular data in CSV format
 import csv
 
-reader = csv.DictReader(open(books.csv, 'r')) #Openinig the csv file in read mode and assigning to reader object
+import os
 
-db = SQLAlchemy() # This allows sqlite3 queries to be executed on students.db
+from sqlalchemy import create_engine
 
-    #db.execute("DELETE from students") #for deleting any existing data in the table
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-for row in reader: #accessing every row in reader object
-    print(row)
+# database engine object from SQLAlchemy that manages connections to the database
+# os.getenv() method in Python returns the value of the environment variable key if it exists otherwise returns the default value.
+engine = create_engine(os.getenv("DATABASE_URL"))
 
-        # for storing all the 3 name variables and house, birth into students table
-        #db.execute("INSERT INTO students (first, middle, last, house, birth) VALUES (?, ?, ?, ?, ?)", first, middle, last, row["house"], row["birth"])
+# create a 'scoped session' that ensures different users' interactions with the database are kept separate
+db = scoped_session(sessionmaker(bind=engine)) #Picked from web
 
+count = 0 #Enable if you wish to have the count of rows inserted
+
+with open("books.csv", "r") as file: #using 'with' assuming that it's the safest option of opening a file 
+    reader = csv.reader(file)
+    next(file) #for skipping the title row from getting inserted into the table
+    for isbn, title, author, year in reader:
+        db.execute("INSERT INTO books (isbn, title, author, year) VALUES (:isbn, :title, :author, :year)",
+                {"isbn": isbn, 
+                 "title": title,
+                 "author": author,
+                 "year": year})
+        count += 1 #Enable if you wish to have the count of rows inserted
+
+        print(f"Added book {title} to database.") #Visual for each row insertion
+
+    db.commit() #Commit has been kept ouside the loop assuming it will lead to faster insert. (not sure)
+
+print(count) #Enable if you wish to have the count of rows inserted
