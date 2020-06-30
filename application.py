@@ -1,5 +1,7 @@
 import os
 
+from flask import Flask, render_template #,session, redirect, request, jsonify, flash
+
 from flask import Flask, session
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -26,7 +28,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    return "Project 1: TODO"
+    return render_template("login.html")
 
 # For DB connection using Terminal execute below.
-# export DATABASE_URL="postgresql://username:password@localhost:5432/database"
+# export DATABASE_URL="postgres://ukpdswnmbmmcuz:23b8e24df67f99e4c192428081408be924dc1745162bc32bca778db643c70e90@ec2-3-234-109-123.compute-1.amazonaws.com:5432/d6hgmt6gs7ijvf"
