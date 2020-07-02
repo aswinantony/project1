@@ -18,6 +18,7 @@
 
     <title>Welcome CS50W 1: {% block title %}{% endblock %}</title>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" style="color:gr">Navbar</a>
@@ -25,13 +26,29 @@
             <span class="navbar-toggler-icon"></span>
         </button>
       
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>                
-                <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-            </ul>
+        <div class="navbar-collapse collapse" id="navbarNavDropdown"></div>
+       
+            <!--if session.user_id is true then search option is enabled in HTML page-->
+            {% if session.user_id %}
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Search</a></li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">{{ session.user_name }}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                </ul>
+            
+            <!--If session.user_id is not true or None-->
+            {% else %}
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>                
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                </ul>
+            {% endif %}
+
         </div>
       </nav>
+
     <!--For displaying aany flash alerts-->
     {% if get_flashed_messages() %}
         <div class="alert alert-light text-center" role="alert">
@@ -40,6 +57,7 @@
             {% endfor %}
         </div>
     {% endif %}
+
     <main class="container p-5">
         {% block content %}
         {% endblock %}
