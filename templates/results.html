@@ -20,6 +20,9 @@
                 <h6 class="card-text">{{book['year']}}</h6>
                 <h6 class="card-text">{{book['isbn']}}</h6>
             </div>
+            <div class="card-footer">
+                <a href="/book/{{book['isbn']}}" class="card-link">Go to book page</a>
+            </div>
         </div>
     {% endfor %}
 </div>
