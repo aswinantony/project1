@@ -14,10 +14,12 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Allows to send HTTP requests using Python.
 import requests
 
+# for using @login_required
+#from flask_security import login_required
+#from helpers import login_required
+
 app = Flask(__name__)
 #app.config['DATABASE_URL'] = "postgres://ukpdswnmbmmcuz:23b8e24df67f99e4c192428081408be924dc1745162bc32bca778db643c70e90@ec2-3-234-109-123.compute-1.amazonaws.com:5432/d6hgmt6gs7ijvf"
-
-
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -33,7 +35,7 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
-@login_required #https://flask-login.readthedocs.io/en/latest/#flask_login.login_required
+#@login_required #https://flask-login.readthedocs.io/en/latest/#flask_login.login_required
 def home():
     return render_template("home.html")
 
@@ -145,6 +147,40 @@ def register():
 
     else:
         return render_template("register.html")
+
+@app.route("/search", methods=["GET"])
+#@login_required
+def search():
+    """ Get books results """
+
+    # Check book id was provided
+    if not request.args.get("book"):
+        return render_template("error.html", message="you must provide a book.")
+
+    # Take input and add a wildcard 
+    # This wildcard could be used as a search key word
+    # Also wildcard is enclosed in '%' to use 'like' operator while preparing SELECT query
+    wildcard = "%" + request.args.get("book") + "%"
+
+    # Capitalize first word of wildcard to CAPS and rest to lowercase.
+    # This is done because we know the data for Author and Title in books are stored in that format
+    # ISBN will not get affected assuming 
+    wildcard = wildcard.lower()
+    
+    rows = db.execute("SELECT isbn, title, author, year FROM books WHERE \
+                        isbn LIKE LOWER(:wildcard) OR \
+                        title LIKE LOWER(:wildcard) OR \
+                        author LIKE LOWER(:wildcard) LIMIT 15",
+                        {"wildcard": wildcard})
+    
+    # Books not founded
+    if rows.rowcount == 0:
+        return render_template("error.html", message="we can't find books with that description.")
+    
+    # Fetch all the results
+    books = rows.fetchall()
+
+    return render_template("results.html", books=books)
 
 
 
