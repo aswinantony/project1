@@ -14,7 +14,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Allows to send HTTP requests using Python.
 import requests
 
-# for using @login_required (custom decorator used, check login_decorator.py)
+# for using @login_required (custom decorator used, check login_decorator.py )
 from login_decorator import login_required
 
 app = Flask(__name__)
