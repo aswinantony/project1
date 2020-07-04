@@ -156,15 +156,10 @@ def search():
     if not request.args.get("book"):
         return render_template("error.html", message="you must provide a book.")
 
-    # Take input and add a wildcard 
+    # Take input and prepare a wildcard 
     # This wildcard could be used as a search key word
     # Also wildcard is enclosed in '%' to use 'like' operator while preparing SELECT query
     wildcard = "%" + request.args.get("book") + "%"
-
-    # Capitalize first word of wildcard to CAPS and rest to lowercase.
-    # This is done because we know the data for Author and Title in books are stored in that format
-    # ISBN will not get affected assuming 
-    #wildcard = wildcard.title()
     
     # used ILIKE operator to make the select case-insensitive.
     rows = db.execute("SELECT isbn, title, author, year FROM books WHERE \
@@ -238,6 +233,7 @@ def book(isbn):
                     isbn = :isbn",
                     {"isbn": isbn})
 
+        # Hence this is the bookInfo[0] for using in reviews.html
         bookInfo = row.fetchall()
 
         """ GOODREADS reviews """
@@ -255,7 +251,7 @@ def book(isbn):
         # "Clean" the JSON before passing it to the bookInfo list
         response = json_response['books'][0]
 
-        # Append it as the second element on the list. [1]
+        # Append it as the second element on the list to get bookInfo[1] for using in reviews.html
         bookInfo.append(response)
 
         """ Users reviews """
@@ -265,10 +261,11 @@ def book(isbn):
                         {"isbn": isbn})
 
         # Save id into variable
+        # 'id' of the user is found in both tables 'reviews' and 'users'
+        # Hence this would be used for framing the JOIN query
         book = row.fetchone() # (id,)
         book = book[0]
 
-        # TBC this
         # Fetch book reviews
         # Date formatting (https://www.postgresql.org/docs/9.1/functions-formatting.html)
         results = db.execute("SELECT users.username, comment, rating, \
@@ -284,8 +281,8 @@ def book(isbn):
 
         return render_template("reviews.html", bookInfo=bookInfo, reviews=reviews)
 
-# API Access: If users make a GET request to your website’s /api/<isbn> route
 
+# API Access: If users make a GET request to your website’s /api/<isbn> route
 @app.route("/api/<isbn>", methods=['GET'])
 @login_required
 def api_call(isbn):
@@ -319,11 +316,3 @@ def api_call(isbn):
     result['average_score'] = float('%.2f'%(result['average_score']))
 
     return jsonify(result)
-
-# For DB connection using Terminal execute below.
-# export DATABASE_URL="postgres://ukpdswnmbmmcuz:23b8e24df67f99e4c192428081408be924dc1745162bc32bca778db643c70e90@ec2-3-234-109-123.compute-1.amazonaws.com:5432/d6hgmt6gs7ijvf"
-# export FLASK_DEBUG=1
-# export FLASK_APP=application.py
-# flask run
-# export GOODREADS_KEY=ujwjG0jOFODfm9vremfHw
-# Sample user credentials : herokutest & herokutest1 / admin123+++
