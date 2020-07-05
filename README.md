@@ -50,6 +50,6 @@ In this project, you’ll build a book review website. Users will be able to reg
 ## Static files
 - style.css - Holds all the style elements.
 
-For more details of how I did this click on my notion page link.
+For more details on how I did this click on my notion page link.
 https://www.notion.so/How-I-did-it-0810ef2b8e594d2b8f4f91c42d13abca
 
