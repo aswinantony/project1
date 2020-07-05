@@ -7,9 +7,6 @@
 {% block content %}
 
     <div class="row book-container">
-        <div class="col-sm-4">
-            <!--<img src="http://covers.openlibrary.org/b/isbn/{{bookInfo[0]['isbn']}}-M.jpg" width="130px">-->
-        </div>
         <div class="col-sm-4"> <!--TBS bookInfo from DB-->
             <h1>{{bookInfo[0]['title']}}</h1>
             <h5>Author: {{bookInfo[0]['author']}}</h5>
@@ -19,8 +16,7 @@
 
         <!--GOODREADS REVIEWS -->
         <div class="col-sm-4">
-            <!--<img class="mb-3" src="../static/goodreads.jpg" alt="Goodreads" width="200" height="45">-->
-            <h5>Nº of Ratings: {{bookInfo[1]['work_ratings_count']}}</h5>
+            <h5>No of Ratings: {{bookInfo[1]['work_ratings_count']}}</h5>
             <h5>Average Rating: {{bookInfo[1]['average_rating']}}</h5>
             <h5>
                 <!--Learn with another website-->

@@ -1,23 +1,15 @@
 Flask
 Flask-Session
-psycopg2-binary
+psycopg2
 SQLAlchemy
-
-
-
-
-
-# installed
-
-helpers
-
-
+Jinja2
+Werkzeug
+MarkupSafe
+itsdangerous
+requests
+Click
 certifi
 chardet
 idna
 urllib3
-
-
-# Heroku
-
 gunicorn

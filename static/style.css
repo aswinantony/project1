@@ -19,6 +19,17 @@ main .form-control
     align-items: baseline;
 }
 
+.book-container {
+    display: flex;
+    justify-content: center;
+}
+
+.form-border {
+    border-color: #ECDB88;
+    border-style: solid;
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
 
 main
 {
@@ -29,3 +40,8 @@ main
     text-align: center;
 }
 
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
