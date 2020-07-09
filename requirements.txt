@@ -1,3 +1,4 @@
+# Includes CS50 recommended and others 
 Flask
 Flask-Session
 psycopg2
